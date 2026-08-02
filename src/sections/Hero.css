@@ -1,0 +1,285 @@
+/* --- LA SECTION PRINCIPALE --- */
+.hero-section {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 5%;
+  padding-top: 80px;
+}
+
+/* --- LE CONTENEUR SPLIT (Texte à gauche, Image à droite) --- */
+.hero-content {
+  max-width: 1200px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8rem;
+  /* L'espace entre le texte et l'image a été augmenté pour pousser la photo */
+}
+
+/* =========================================
+   PARTIE GAUCHE (TEXTE)
+   ========================================= */
+.hero-text-side {
+  flex: 1;
+  /* Prend tout l'espace disponible à gauche */
+}
+
+
+.hero-name {
+  font-size: clamp(3rem, 6vw, 4.5rem);
+  font-weight: 800;
+  color: var(--foreground);
+  line-height: 1.1;
+  margin-bottom: 0.5rem;
+}
+
+.hero-title {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 800;
+  color: var(--foreground);
+  line-height: 1.2;
+  margin-bottom: 2rem;
+}
+
+/* =========================================
+   ANIMATION DU TEXTE (KINETIC)
+   ========================================= */
+.fx-text-split {
+  display: inline-block;
+  margin-top: 0.5rem;
+  /* Petit espace avec le "Je suis" */
+  white-space: nowrap; /* Empêche le texte de se casser sur plusieurs lignes */
+}
+
+.fx-text-split span {
+  display: inline-block;
+  animation: fx-split 2.5s ease-in-out infinite;
+  /* Utilise la variable --i calculée par React pour décaler chaque lettre */
+  animation-delay: calc(var(--i) * 0.1s);
+}
+
+@keyframes fx-split {
+
+  0%,
+  100% {
+    transform: translateY(0) rotate(0);
+    color: var(--primary);
+    /* J'ai adapté avec le bleu de ton thème ! */
+  }
+
+  50% {
+    transform: translateY(-10px) rotate(8deg);
+    color: var(--accent);
+    /* Et j'ai gardé la couleur d'accent au milieu du saut pour la touche Tech */
+  }
+}
+
+.hero-description {
+  font-size: 1.125rem;
+  color: var(--muted-foreground);
+  max-width: 600px;
+  margin-bottom: 3rem;
+  line-height: 1.8;
+}
+
+/* --- LES BOUTONS --- */
+.hero-buttons {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.btn {
+  padding: 1rem 2rem;
+  border-radius: var(--radius);
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: all var(--transition-speed);
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  border: 2px solid var(--primary);
+  box-shadow: 0 4px 15px rgba(46, 103, 255, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(46, 103, 255, 0.5);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--foreground);
+  border: 2px solid var(--border);
+}
+
+.btn-secondary:hover {
+  border-color: var(--foreground);
+  transform: translateY(-3px);
+}
+
+/* =========================================
+   PARTIE DROITE (IMAGE)
+   ========================================= */
+.hero-image-side {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  /* Pousse l'image bien à droite */
+}
+
+/* Le conteneur parent pour positionner l'arc et l'image ensemble */
+.hero-image-container {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  aspect-ratio: 1 / 1;
+  margin-right: 60px;
+  /* Laisse de l'espace à droite pour l'arc et les icônes */
+  /* L'animation qui fait doucement flotter l'ensemble */
+  animation: float 6s ease-in-out infinite;
+}
+
+.hero-profile-pic {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Rend l'image 100% ronde */
+  border-radius: 50%;
+  border: 4px solid var(--accent);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 2;
+  /* L'image passe au-dessus de la ligne de l'arc */
+}
+
+/* =========================================
+   L'ARC DE CERCLE ET SES ICÔNES
+   ========================================= */
+.hero-arc-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  /* Laisse le clic passer à travers s'il n'est pas sur une icône */
+}
+
+.hero-arc-line {
+  position: absolute;
+  /* On agrandit la taille de l'arc de 20% par rapport à l'image */
+  top: -15%;
+  left: -15%;
+  width: 130%;
+  height: 130%;
+  border-radius: 50%;
+  border: 2px dashed var(--primary);
+  /* On coupe l'arc pour ne garder que la moitié droite */
+  clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%);
+  z-index: 1;
+}
+
+/* Base pour toutes les icônes sur l'arc */
+.icon-orbit {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* L'orbite tourne à l'angle défini dans le style inline (--angle) */
+  transform: rotate(var(--angle));
+  pointer-events: none;
+  /* Laisse le clic passer au travers de la div invisible */
+  z-index: 2;
+  /* IMPORTANT: Place l'orbite AU-DESSUS de la ligne pointillée (qui est z-index: 1) */
+}
+
+.hero-arc-icon {
+  position: absolute;
+  /* top: -15% correspond exactement au rayon de notre hero-arc-line (qui est à top: -15%) */
+  top: -15%;
+  left: 50%;
+  /* On centre l'icône et on la contre-pivote pour qu'elle reste toujours parfaitement droite */
+  transform: translate(-50%, -50%) rotate(calc(-1 * var(--angle)));
+
+  width: 55px;
+  /* Taille augmentée */
+  height: 55px;
+  /* Taille augmentée */
+  background-color: var(--background);
+  /* Fond 100% opaque pour cacher la ligne */
+  border: 2px solid var(--primary);
+  /* Bordure légèrement plus épaisse pour ressortir */
+  color: var(--primary);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.3rem;
+  /* Icône plus grande */
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  pointer-events: auto;
+  /* Réactive le clic uniquement sur l'icône */
+  z-index: 3;
+}
+
+.hero-arc-icon:hover {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  transform: translate(-50%, -50%) rotate(calc(-1 * var(--angle))) scale(1.15) !important;
+  box-shadow: 0 5px 15px rgba(46, 103, 255, 0.4);
+}
+
+
+/* Le keyframe de l'animation flottante */
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-20px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+/* =========================================
+   RESPONSIVE (Mobile & Tablette)
+   ========================================= */
+@media (max-width: 968px) {
+  .hero-content {
+    /* Sur petit écran, on passe en colonne (image au-dessus, texte en dessous) */
+    flex-direction: column-reverse;
+    text-align: center;
+    /* On recentre le texte */
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .hero-text-side {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Centre les boutons et le texte */
+  }
+
+  .hero-image-side {
+    justify-content: center;
+    /* Centre l'image */
+  }
+
+  .hero-profile-pic {
+    max-width: 320px;
+    /* On réduit un peu la taille de l'image sur téléphone */
+  }
+}

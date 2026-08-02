@@ -1,0 +1,196 @@
+/* =========================================
+   ÉTAT INITIAL (Collé en haut)
+   ========================================= */
+.navbar {
+  position: fixed;
+  top: 0;
+  
+  /* 🔥 CORRECTION POUR FRAMER MOTION : Le centrage parfait sans "transform" */
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  
+  width: 100%;
+  height: 80px;
+  background-color: var(--background); 
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 5%;
+  z-index: 1000; 
+  border-radius: 0px; 
+  
+  transition: background-color var(--transition-speed), box-shadow var(--transition-speed);
+}
+
+/* --- 1. LA BORDURE NETTE ANIMÉE --- */
+.navbar::before {
+  content: "";
+  position: absolute;
+  inset: 0; 
+  border-radius: 50px; 
+  padding: 3px; 
+  background: linear-gradient(120deg, var(--primary), var(--accent), var(--primary));
+  background-size: 200% 100%;
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: fx-border-glow-flow 4s linear infinite;
+  pointer-events: none; 
+  opacity: 0;
+  transition: opacity 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* --- 2. LE GLOW AU SURVOL (Avec fondu externe parfait) --- */
+.navbar::after {
+  content: "";
+  position: absolute;
+  
+  /* On agrandit la boîte de 15px vers l'extérieur pour laisser le flou respirer */
+  inset: -15px; 
+  border-radius: 0px; 
+  
+  /* On utilise une bordure transparente de 15px pour retenir la couleur */
+  border: 15px solid transparent; 
+  padding: 2px; /* 15px de bordure + 2px de padding = 17px pour évider sous la bordure nette */
+  
+  background: linear-gradient(45deg, var(--primary), var(--accent), var(--primary));
+  background-clip: padding-box; /* Force la couleur à rester avant la bordure transparente */
+  background-size: 200% 200%;
+  
+  z-index: -1; 
+  filter: blur(10px); /* Le flou peut maintenant diffuser dans la zone des 15px ! */
+  opacity: 0; 
+  pointer-events: none;
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  animation: fx-border-glow-flow 4s linear infinite;
+
+  /* Le masque qui évide le centre */
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+/* =========================================
+   STYLE DU MENU ET DU BOUTON
+   ========================================= */
+.navbar-logo a {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--primary); 
+}
+
+.navbar-menu {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem; 
+}
+
+.navbar-links {
+  display: flex;
+  gap: 2rem;
+}
+
+.navbar-links a {
+  font-weight: 500;
+  color: var(--foreground);
+  transition: color var(--transition-speed);
+}
+
+.navbar-links a:hover {
+  color: var(--primary);
+}
+
+/* --- LE NOUVEAU TOGGLE PREMIUM --- */
+.theme-track {
+  position: relative;
+  display: flex;
+  height: 36px;
+  width: 70px;
+  cursor: pointer;
+  align-items: center;
+  border-radius: 50px;
+  padding: 4px;
+  /* L'anneau externe subtil */
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
+.dark .theme-track {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.theme-thumb {
+  position: relative;
+  display: flex;
+  height: 28px;
+  width: 28px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.theme-icon-container {
+  position: relative;
+  height: 16px;
+  width: 16px;
+}
+
+.theme-icon {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sun-icon { color: #f59e0b; }
+.moon-icon { color: #bfdbfe; }
+
+/* =========================================
+   ÉTAT SCROLLÉ (Détaché avec effet iOS)
+   ========================================= */
+.navbar.scrolled {
+  top: 20px; 
+  width: 85%; 
+  max-width: 1000px; 
+  height: 70px; 
+  border-radius: 50px; 
+  
+  /* L'effet Glassmorphism d'Apple (Fond semi-transparent + flou d'arrière-plan) */
+  background-color: color-mix(in srgb, var(--card) 85%, transparent); 
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px); /* Pour Safari/iPhone */
+  
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  padding: 0 3rem; 
+}
+
+/* Apparition de la bordure nette */
+.navbar.scrolled::before {
+  opacity: 1; 
+}
+
+/* On arrondit le Glow pour qu'il épouse parfaitement la forme */
+.navbar.scrolled::after {
+  border-radius: 65px; /* 50px (navbar) + 15px (l'agrandissement) = 65px */
+}
+
+/* Déclenchement du Glow au survol */
+.navbar.scrolled:hover::after {
+  opacity: 0.8; /* Légèrement plus fort pour compenser le flou externe */
+}
+
+/* =========================================
+   ANIMATIONS
+   ========================================= */
+@keyframes fx-border-hue {
+  to { filter: hue-rotate(360deg); }
+}
+
+@keyframes fx-border-glow-flow {
+  to { background-position: 300% 50%; }
+}

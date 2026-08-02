@@ -1,0 +1,162 @@
+/* =========================================
+   LA SECTION PRINCIPALE
+   ========================================= */
+.projects-section {
+  padding: 100px 5%;
+  /* Ajoute ceci pour être sûr que c'est transparent : */
+  background-color: transparent;
+  overflow: hidden; 
+}
+
+/* Le "tapis" sur lequel on pose nos cartes */
+.stack-container {
+  position: relative;
+  width: 100%;
+  max-width: 420px; 
+  height: 550px; 
+  margin: 4rem auto;
+  perspective: 1000px; 
+}
+
+/* =========================================
+   LA CARTE INDIVIDUELLE
+   ========================================= */
+.project-card {
+  position: absolute;
+  top: 0; 
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--card);
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  cursor: grab;
+  user-select: none; 
+  touch-action: none;
+  
+  /* LA CORRECTION EST ICI : On recentre le point de pivot */
+  transform-origin: center center; 
+}
+
+.project-card:active {
+  cursor: grabbing;
+}
+
+/* --- LE MÉDIA (Effet Netflix) --- */
+.project-media-container {
+  position: relative;
+  width: 100%;
+  height: 230px;
+  overflow: hidden;
+  background-color: var(--secondary);
+}
+
+.project-media {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+/* Le voile d'assombrissement au repos */
+.netflix-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5); /* 50% de noir par dessus la vidéo */
+  transition: opacity 0.4s ease;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* La magie s'opère : le voile disparaît au survol ! */
+.project-card:hover .netflix-overlay {
+  opacity: 0;
+}
+
+/* Petit effet de zoom sur la vidéo au survol */
+.project-card:hover .project-media {
+  transform: scale(1.05);
+}
+
+/* --- LE CONTENU (Textes & Boutons) --- */
+.project-info {
+  padding: 1.5rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.project-info h3 {
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
+  color: var(--foreground);
+}
+
+.tech-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.tech-stack span {
+  font-size: 0.75rem;
+  padding: 0.3rem 0.8rem;
+  background-color: var(--background);
+  border: 1px solid var(--border);
+  color: var(--muted-foreground);
+  border-radius: 20px;
+}
+
+.project-info p {
+  color: var(--muted-foreground);
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+  flex: 1;
+  line-height: 1.5;
+}
+
+/* --- LES BOUTONS D'ACTION --- */
+.project-links {
+  display: flex;
+  gap: 1rem;
+  margin-top: auto; /* Pousse les boutons tout en bas de la carte */
+}
+
+.btn-icon {
+  flex: 1; /* Les deux boutons prennent la même largeur */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--primary);
+  text-decoration: none;
+  padding: 0.6rem 1rem;
+  border: 1px solid var(--primary);
+  border-radius: 8px;
+  transition: all var(--transition-speed);
+}
+
+.btn-icon:hover {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  transform: translateY(-2px);
+}
+.private-btn {
+  color: var(--muted-foreground);
+  border-color: var(--border);
+  background-color: var(--muted);
+  cursor: not-allowed;
+}
+
+.private-btn:hover {
+  background-color: var(--muted);
+  color: var(--muted-foreground);
+  transform: none;
+}

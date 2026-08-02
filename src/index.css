@@ -1,0 +1,146 @@
+/* --- VARIABLES GLOBALES (Ton Thème) --- */
+:root {
+  /* Mode Clair */
+  --background: #fcfcfc;
+  --foreground: #0e142b;
+  --card: #fafafa;
+  --card-foreground: #0e142b;
+  --primary: #2e67ff;
+  --primary-foreground: #ffffff;
+  --secondary: #0e142b;
+  --secondary-foreground: #ffffff;
+  
+  /* Textes et fonds secondaires */
+  --muted: #f1f5f9; /* Gris très clair pour les fonds secondaires */
+  --muted-foreground: #64748b; /* Gris moyen pour le texte secondaire */
+  
+  /* Couleur d'Accent (Tech/Futuriste : Cyan) */
+  --accent: #22d3ee;
+  --accent-foreground: #0e142b;
+  
+  /* Dégradés officiels */
+  --gradient-primary: linear-gradient(135deg, var(--primary), var(--accent));
+  --gradient-text: linear-gradient(90deg, var(--foreground) 0%, var(--primary) 40%, var(--accent) 50%, var(--primary) 60%, var(--foreground) 100%);
+  
+  /* Ombres */
+  --primary-glow: rgba(46, 103, 255, 0.4);
+  --accent-glow: rgba(34, 211, 238, 0.4);
+  
+  --border: #e7e4e4;
+  
+  /* Polices et autres */
+  --font-sans: 'Open Sans', system-ui, sans-serif;
+  --radius: 1.3rem;
+  --transition-speed: 0.3s;
+}
+
+/* Mode Sombre */
+.dark {
+  --background: #000000;
+  --foreground: #ffffff;
+  --card: #0f0f0f;
+  --card-foreground: #d9d9d9;
+  --primary: #2b65ff;
+  --primary-foreground: #ffffff;
+  --secondary: #ffffff;
+  --secondary-foreground: #0e142b;
+  
+  /* Textes et fonds secondaires */
+  --muted: #1e293b; /* Bleu-gris très foncé */
+  --muted-foreground: #94a3b8; /* Gris clair pour le texte secondaire */
+  
+  /* Couleur d'Accent (Tech/Futuriste : Cyan plus brillant en dark mode) */
+  --accent: #06b6d4;
+  --accent-foreground: #ffffff;
+  
+  /* Dégradés officiels (s'adaptent automatiquement avec les variables) */
+  --gradient-primary: linear-gradient(135deg, var(--primary), var(--accent));
+  --gradient-text: linear-gradient(90deg, var(--foreground) 0%, var(--primary) 40%, var(--accent) 50%, var(--primary) 60%, var(--foreground) 100%);
+  
+  /* Ombres */
+  --primary-glow: rgba(43, 101, 255, 0.5);
+  --accent-glow: rgba(6, 182, 212, 0.5);
+
+  --border: #26272e;
+}
+
+/* --- RESET ET STYLES DE BASE --- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  border-color: var(--border); 
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  line-height: 1.6;
+  transition: background-color var(--transition-speed), color var(--transition-speed);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+/* =========================================
+   EN-TÊTES DE SECTION (Global)
+   ========================================= */
+.section-header {
+  text-align: center;
+  margin-bottom: 4rem; 
+  position: relative;
+  width: 100%;
+}
+
+.section-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  letter-spacing: -0.5px;
+  
+  /* Utilisation du dégradé officiel du thème */
+  background: var(--gradient-text);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent; 
+  -webkit-text-fill-color: transparent;
+  
+  /* Vitesse calquée sur ton exemple original (2.2s) */
+  animation: fx-shimmer-text 4.2s linear infinite;
+}
+
+
+/* --- L'ANIMATION DU TEXTE (À coller juste sous .section-title) --- */
+@keyframes fx-shimmer-text {
+  to { background-position: -200% 50%; }
+}
+
+.section-subtitle {
+  font-size: 1.1rem;
+  color: var(--muted-foreground);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Responsive pour les titres sur mobile */
+@media (max-width: 768px) {
+  .section-title {
+    font-size: 2rem;
+  }
+  .section-header {
+    margin-bottom: 3rem;
+  }
+}

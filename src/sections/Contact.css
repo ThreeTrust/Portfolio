@@ -1,0 +1,154 @@
+/* --- LA SECTION CONTACT --- */
+.contact-section {
+  /* Ajoute ceci pour être sûr que c'est transparent : */
+  background-color: transparent;
+  padding-top: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.contact-container {
+  max-width: 800px;
+  width: 100%;
+  text-align: center;
+  padding: 0 5%;
+  margin-bottom: 120px;
+}
+
+.contact-description {
+  color: var(--muted-foreground);
+  font-size: 1.1rem;
+  margin-bottom: 3rem;
+  line-height: 1.6;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* =========================================
+   LE FORMULAIRE (Floating Labels)
+   ========================================= */
+.contact-form {
+  background-color: var(--card);
+  padding: 4rem 3rem; /* Un peu plus d'espace pour respirer en haut */
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem; /* On augmente l'espace entre les champs car les labels montent */
+  text-align: left; 
+}
+
+.form-row {
+  display: flex;
+  gap: 2rem;
+}
+
+/* Le conteneur du champ */
+.input-group {
+  position: relative;
+  flex: 1; 
+}
+
+/* Le champ de saisie (Transparent, juste une bordure en bas) */
+.input-group input,
+.input-group textarea {
+  width: 100%;
+  padding: 10px 4px;
+  font-size: 1.05rem;
+  color: var(--foreground);
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  outline: none;
+  font-family: inherit;
+  transition: border-color 0.3s ease;
+}
+
+/* Le textarea a besoin de ne pas être redimensionnable pour que l'animation reste droite */
+.input-group textarea {
+  resize: none;
+}
+
+/* --- LE LABEL FLOTTANT --- */
+.input-group label {
+  position: absolute;
+  left: 4px; 
+  top: 10px;
+  font-size: 1.05rem;
+  color: var(--muted-foreground);
+  pointer-events: none;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* --- LA LIGNE ANIMÉE (Dégradé Thème) --- */
+.input-group .focus-border {
+  position: absolute;
+  left: 0; 
+  bottom: 0;
+  width: 100%; 
+  height: 2px;
+  background: var(--gradient-text);
+  transform: scaleX(0); /* Caché par défaut */
+  transform-origin: left;
+  transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow: 0 0 12px var(--primary-glow);
+}
+
+/* =========================================
+   LES ANIMATIONS AU FOCUS
+   ========================================= */
+
+/* 1. La ligne s'étend quand on clique dans le champ */
+.input-group input:focus ~ .focus-border,
+.input-group textarea:focus ~ .focus-border { 
+  transform: scaleX(1); 
+}
+
+/* 2. Le label monte, rétrécit et prend la couleur primaire (Focus + Champ rempli) */
+.input-group input:focus ~ label,
+.input-group input:not(:placeholder-shown) ~ label,
+.input-group textarea:focus ~ label,
+.input-group textarea:not(:placeholder-shown) ~ label {
+  top: -20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+/* --- BOUTON ET RETOUR --- */
+.submit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  margin-top: 1.5rem;
+  padding: 1.2rem;
+  font-size: 1.1rem;
+}
+
+.send-icon {
+  font-size: 1.2rem;
+}
+
+.form-result {
+  text-align: center;
+  font-weight: 600;
+  margin-top: 1rem;
+  color: var(--primary);
+}
+
+/* =========================================
+   RESPONSIVE (Mobile)
+   ========================================= */
+@media (max-width: 768px) {
+  .form-row {
+    flex-direction: column; /* Sur mobile, le nom et l'email s'empilent */
+  }
+  
+  .contact-form {
+    padding: 2rem 1.5rem;
+  }
+}

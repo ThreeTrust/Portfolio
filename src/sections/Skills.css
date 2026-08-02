@@ -1,0 +1,163 @@
+/* --- LA SECTION GÉNÉRALE --- */
+.skills-section {
+  padding: 100px 5%;
+  /* On applique la couleur de fond secondaire (muted) */
+  background-color: var(--muted);
+  overflow: hidden; 
+}
+
+.skills-universe {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 5rem; 
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 0;
+}
+
+/* 🌊 L'EFFET DE VAGUE GLOBAL (Centre + Satellites) */
+.system-wrapper.wave-float {
+  animation: fx-float 4s ease-in-out infinite;
+}
+
+@keyframes fx-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); } 
+}
+
+/* =========================================
+   LE SYSTÈME SOLAIRE
+   ========================================= */
+.solar-system {
+  position: relative;
+  width: 300px; 
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.solar-system:hover .orbit-satellite {
+  animation-play-state: paused;
+}
+
+/* --- L'ASTRE CENTRAL (Plus compact pour l'icône) --- */
+.orbit-center {
+  position: relative;
+  width: 100px; /* Taille réduite */
+  height: 100px;
+  border-radius: 50%;
+  background: var(--gradient-primary);
+  color: var(--primary-foreground);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 0 30px rgba(46, 103, 255, 0.4);
+  z-index: 10;
+  cursor: pointer;
+  transition: transform var(--transition-speed);
+}
+
+.center-icon {
+  font-size: 2.2rem;
+  display: flex;
+}
+
+.orbit-center:hover {
+  transform: scale(1.05);
+  z-index: 100;
+}
+
+/* --- LES SATELLITES --- */
+.orbit-satellite {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 50px; 
+  height: 50px;
+  margin-top: -25px; 
+  margin-left: -25px;
+  
+  background-color: var(--card);
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 5;
+  cursor: pointer;
+  transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
+
+  /* Rapprochement de l'orbite pour matcher avec le centre de 100px */
+  --angle: calc(var(--i) * (360deg / var(--total)));
+  --radius: 100px; 
+  
+  animation: fx-orbit 20s linear infinite;
+}
+
+.satellite-icon {
+  font-size: 1.5rem;
+  color: var(--foreground);
+  display: flex;
+  transition: color var(--transition-speed);
+}
+
+.orbit-satellite:hover {
+  border-color: var(--primary);
+  box-shadow: 0 0 20px rgba(46, 103, 255, 0.3);
+  z-index: 100;
+}
+
+.orbit-satellite:hover .satellite-icon {
+  color: var(--primary);
+}
+
+/* =========================================
+   L'INFOBULLE (TOOLTIP) UNIVERSELLE
+   ========================================= */
+.satellite-tooltip {
+  position: absolute;
+  bottom: 120%; 
+  left: 50%;
+  transform: translateX(-50%) translateY(10px);
+  
+  background-color: var(--foreground);
+  color: var(--background);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  white-space: nowrap; 
+  
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55); 
+  pointer-events: none; 
+  /* 🔥 LA CORRECTION : Le pop-up sera toujours au-dessus */
+  z-index: 999;
+}
+
+/* Active l'infobulle pour les satellites ET pour le centre */
+.orbit-satellite:hover .satellite-tooltip,
+.orbit-center:hover .satellite-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* =========================================
+   L'ANIMATION D'ORBITE
+   ========================================= */
+@keyframes fx-orbit {
+  0% { transform: rotate(var(--angle)) translateX(var(--radius)) rotate(calc(var(--angle) * -1)); }
+  100% { transform: rotate(calc(var(--angle) + 360deg)) translateX(var(--radius)) rotate(calc((var(--angle) + 360deg) * -1)); }
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 768px) {
+  .skills-universe { gap: 2rem; }
+  .system-wrapper { transform: scale(0.9); }
+}
