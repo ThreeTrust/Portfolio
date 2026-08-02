@@ -3,6 +3,9 @@ import { motion } from 'framer-motion';
 import { FaGithub, FaExternalLinkAlt, FaLock } from 'react-icons/fa';
 import Reveal from '../components/Reveal';
 import './Projects.css';
+import thronosImg from '../assets/ThronosWebsit.png';
+import agromapBOImg from '../assets/AgromapBackOffice.png';
+import agromapWebImg from '../assets/AgromapWebsite.png';
 
 // 📂 Tes données 
 const initialProjects = [
@@ -11,7 +14,7 @@ const initialProjects = [
     title: "Thronos-CI",
     techs: ["React Web", "HTML", "CSS", "Javascript"],
     desc: "Il s'agit d'un site web pour une entreprise de la place  Thronos-CI qui est spécialisée dans transformation digitale , la creation de sites web , et le marketing digitale.",
-    media: "/src/assets/ThronosWebsit.png",
+    media: thronosImg,
     liveLink: "https://Thronos-ci.com",
     githubLink: "private" // Marqué comme privé
   },
@@ -20,7 +23,7 @@ const initialProjects = [
     title: "BackOffice Agromap",
     techs: ["React", "Swagger", "Django", "Api REST"],
     desc: "C'est un tableau de bord pour suivre les données de l'entreprise Agromap CI.",
-    media: "/src/assets/AgromapBackOffice.png",
+    media: agromapBOImg,
     liveLink: "#",
     githubLink: "private" // Marqué comme privé
   },
@@ -29,7 +32,7 @@ const initialProjects = [
     title: "Agromap CI",
     techs: ["React", "Leaflet", "CSS3", "JS"],
     desc: "Il s'agit d'un site web pour une entreprise de la place  Agromap CI qui est spécialisée dans l'agriculture .",
-    media: "/src/assets/AgromapWebsite.png",
+    media: agromapWebImg,
     liveLink: "http://demo.agromap-holding.com/",
     githubLink: "private" // Marqué comme privé
   }

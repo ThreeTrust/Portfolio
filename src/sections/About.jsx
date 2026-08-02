@@ -5,6 +5,7 @@ import {
   FaMapMarkerAlt, FaDownload, FaEnvelope
 } from 'react-icons/fa';
 import './About.css';
+import whatImg from '../assets/WHAT.png';
 
 const About = () => {
   const highlights = [
@@ -37,7 +38,7 @@ const About = () => {
           <div className="bio-header">
             <div className="bio-avatar-wrapper">
               <img
-                src="/src/assets/WHAT.png"
+                src={whatImg}
                 alt="Portrait"
                 className="bio-avatar"
                 onError={(e) => { e.target.style.display = 'none'; }}

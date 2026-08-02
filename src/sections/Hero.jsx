@@ -1,6 +1,7 @@
 import './Hero.css';
 import { FaPhoneAlt, FaEnvelope, FaLinkedinIn, FaFacebookF } from 'react-icons/fa';
 import Reveal from '../components/Reveal';
+import whatImg from '../assets/WHAT.png';
 
 const Hero = () => {
   // On stocke le texte dans une variable pour le découper facilement
@@ -55,7 +56,7 @@ const Hero = () => {
           <Reveal direction="right" delay={0.3}>
             <div className="hero-image-container">
               <img
-                src="\src\assets\WHAT.png"
+                src={whatImg}
                 alt="Portrait de moi"
                 className="hero-profile-pic"
               />
