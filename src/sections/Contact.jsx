@@ -13,8 +13,9 @@ const Contact = () => {
     
     const formData = new FormData(event.target);
     
-    // ⚠️ REMPLACE CETTE CLÉ PAR CELLE QUE TU AS REÇUE PAR EMAIL !
-    formData.append("access_key", "TON_ACCESS_KEY_ICI");
+    // Utilisation de la variable d'environnement pour cacher la clé API
+    const accessKey = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY;
+    formData.append("access_key", accessKey);
 
     try {
       const response = await fetch("https://api.web3forms.com/submit", {
