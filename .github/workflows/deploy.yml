@@ -1,0 +1,40 @@
+name: Deploy to GitHub Pages
+
+on:
+  # Se déclenche à chaque push sur la branche principale (main ou master)
+  push:
+    branches: [ main, master ]
+  # Permet de lancer le workflow manuellement depuis GitHub
+  workflow_dispatch:
+
+# Permet au script de publier sur GitHub Pages
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          
+      - name: Installation des dépendances
+        run: npm install
+        
+      - name: Build du projet
+        # C'est ici qu'on passe le secret Web3Forms au build de Vite !
+        env:
+          VITE_WEB3FORMS_ACCESS_KEY: ${{ secrets.VITE_WEB3FORMS_ACCESS_KEY }}
+        run: npm run build
+        
+      - name: Déploiement sur gh-pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
