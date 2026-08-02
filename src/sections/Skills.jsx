@@ -8,7 +8,7 @@ import {
 } from 'react-icons/fa';
 import './Skills.css';
 
-// 🧠 Dictionnaire pour les Satellites (Technologies)
+// Dictionnaire pour les Satellites (Technologies)
 const getIconForSkill = (skillName) => {
   const name = skillName.toLowerCase();
   if (name.includes('react')) return <FaReact />;
