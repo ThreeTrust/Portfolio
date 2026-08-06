@@ -5,43 +5,31 @@
   position: fixed;
   top: 0;
 
-  /* 🔥 CENTRAGE STABLE : left:0 right:0 margin:auto — immune au layout shift
-     causé par la scrollbar qui disparaît quand overflow:hidden est appliqué. */
+  /* Centrage stable — immune au layout shift causé par la scrollbar */
   left: 0;
   right: 0;
   margin: 0 auto;
 
-  width: 100%;
-  height: 80px;
+  /* width / height / padding / border-radius → Framer Motion (animate prop)
+     background-color / top → CSS transition ci-dessous */
   background-color: var(--background);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 5%;
   z-index: 1000;
-  /* ✅ border-radius initialisé à 0 (sans unité) */
-  border-radius: 0;
   box-sizing: border-box;
 
-  /* 🔥 On liste les propriétés explicitement pour éviter un recalcul de layout
-     à chaque frame. L'offset vertical passe par translateY() (GPU). */
+  /* ✅ On ne transite QUE les propriétés que Framer Motion ne touche pas.
+     Si on met transition: all, CSS et FM animent les mêmes props (width, height…)
+     et se battent → animation cassée sur PC. */
   transition:
-    width            0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
-    height           0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
-    max-width        0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
-    padding          0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
-    background-color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
-    border-radius    0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
-    box-shadow       0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
-    transform        0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    background-color 0.45s cubic-bezier(0.25, 0.8, 0.25, 1),
+    box-shadow 0.45s cubic-bezier(0.25, 0.8, 0.25, 1);
 
-  /* Offset vertical uniquement — le centrage horizontal est géré par margin:auto. */
-  transform: translateY(0) translateZ(0);
-
-  /* 🔥 FIX IOS SAFARI : rendu GPU séparé */
+  /* FIX IOS SAFARI : rendu GPU séparé */
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
-  will-change: transform, background-color, border-radius, width;
+  will-change: transform;
 }
 
 /* --- 1. LA BORDURE NETTE ANIMÉE --- */
@@ -49,8 +37,6 @@
   content: "";
   position: absolute;
   inset: 0;
-  /* ✅ border-radius synchronisé avec .navbar.scrolled (50px) ;
-     en état initial la bordure est invisible (opacity: 0), donc pas de souci. */
   border-radius: 50px;
   padding: 3px;
   background: linear-gradient(120deg, var(--primary), var(--accent), var(--primary));
@@ -66,42 +52,21 @@
   animation: fx-border-glow-flow 4s linear infinite;
   pointer-events: none;
   opacity: 0;
-  transition: opacity 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition: opacity 0.45s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-/* --- 2. LE GLOW AU SURVOL --- */
+/* --- 2. LE GLOW AU SURVOL ---
+   Désactivé : le glow est maintenant géré par box-shadow sur .navbar.scrolled
+   (box-shadow produit une diffusion gaussienne bord → extérieur,
+    ce qui donne naturellement un dégradé d'intensité intérieur → extérieur). */
 .navbar::after {
   content: "";
   position: absolute;
-  inset: -15px;
-  border-radius: 0;
-
-  /* ✅ background-clip: padding-box retiré : il entrait en conflit avec le masque
-     -webkit-mask qui gère déjà l'évidement central. */
-  border: 15px solid transparent;
-  padding: 2px;
-
-  background: linear-gradient(45deg, var(--primary), var(--accent), var(--primary));
-  background-size: 200% 200%;
-
-  z-index: -1;
-  filter: blur(10px);
+  inset: 0;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
-              border-radius 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-  animation: fx-border-glow-flow 4s linear infinite;
-
-  /* Masque qui évide le centre */
-  -webkit-mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  mask-composite: exclude;
 }
+
 /* =========================================
    STYLE DU MENU ET DU BOUTON
    ========================================= */
@@ -132,7 +97,7 @@
   color: var(--primary);
 }
 
-/* --- TOGGLE THÈME --- */
+/* --- LE NOUVEAU TOGGLE PREMIUM --- */
 .theme-track {
   position: relative;
   display: flex;
@@ -142,6 +107,7 @@
   align-items: center;
   border-radius: 50px;
   padding: 4px;
+  /* L'anneau externe subtil */
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05);
 }
 
@@ -173,27 +139,43 @@
   justify-content: center;
 }
 
-.sun-icon  { color: #f59e0b; }
-.moon-icon { color: #bfdbfe; }
+.sun-icon {
+  color: #f59e0b;
+}
+
+.moon-icon {
+  color: #bfdbfe;
+}
 
 /* =========================================
    ÉTAT SCROLLÉ (Pilule détachée iOS)
+
+   ⚠️  Framer Motion gère : width, height, border-radius, padding, y (translateY)
+       CSS gère ici       : top, background-color, backdrop-filter, box-shadow
+   → PAS de doublon entre CSS transition et FM animate.
    ========================================= */
 .navbar.scrolled {
-  width: 85%;
-  max-width: 1000px;
-  height: 70px;
-  border-radius: 50px;
-
+  /* Glassmorphism iOS */
   background-color: color-mix(in srgb, var(--card) 85%, transparent);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-  padding: 0 3rem;
+  /* 🔥 GLOW DÉGRADÉ INTÉRIEUR → EXTÉRIEUR via box-shadow gaussien.
+     box-shadow applique une diffusion de Gauss depuis le bord de la pilule :
+     couche 1 : lueur dense et proche  (forte au bord, dégrade vite)
+     couche 2 : halo large et très doux (s'estompe sur toute la portée)
+     Résultat : intensité maximale au bord, quasi zéro à ~18px de distance. */
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.15),
+    0 0  6px 1px color-mix(in srgb, var(--primary) 25%, transparent),
+    0 0 14px 3px color-mix(in srgb, var(--accent)  12%, transparent);
 
-  /* Offset vertical GPU uniquement — centrage géré par margin:auto */
-  transform: translateY(20px) translateZ(0);
+  transition:
+    box-shadow       0.45s cubic-bezier(0.25, 0.8, 0.25, 1),
+    background-color 0.45s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+  /* max-width contraint la pilule sur grands écrans */
+  max-width: 1000px;
 }
 
 /* Apparition de la bordure nette */
@@ -201,69 +183,32 @@
   opacity: 1;
 }
 
-/* Glow arrondi pour épouser la pilule */
-.navbar.scrolled::after {
-  border-radius: 65px; /* 50px + 15px d'inset */
-}
-
-/* Déclenchement du glow au survol */
-.navbar.scrolled:hover::after {
-  opacity: 0.8;
+/* Glow renforcé au survol */
+.navbar.scrolled:hover {
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.15),
+    0 0  8px 2px color-mix(in srgb, var(--primary) 40%, transparent),
+    0 0 18px 5px color-mix(in srgb, var(--accent)  20%, transparent);
 }
 
 /* =========================================
    ANIMATIONS
    ========================================= */
 @keyframes fx-border-hue {
-  to { filter: hue-rotate(360deg); }
+  to {
+    filter: hue-rotate(360deg);
+  }
 }
 
 @keyframes fx-border-glow-flow {
-  to { background-position: 300% 50%; }
-}
-
-/* =========================================
-   TABLETTE / PETIT LAPTOP (< 1024px)
-   ========================================= */
-@media (max-width: 1024px) {
-  .navbar {
-    padding: 0 3%;
-  }
-
-  .navbar-menu {
-    gap: 1.5rem;
-  }
-
-  .navbar-links {
-    gap: 1.25rem;
-  }
-
-  .navbar-links a {
-    font-size: 0.92rem;
-  }
-
-  .navbar.scrolled {
-    padding: 0 1.75rem;
-  }
-}
-
-@media (max-width: 850px) {
-  .navbar-links {
-    gap: 0.9rem;
-  }
-
-  .navbar-links a {
-    font-size: 0.85rem;
+  to {
+    background-position: 300% 50%;
   }
 }
 
 /* =========================================
    HAMBURGER
    ========================================= */
-
-/* ✅ Défini hors media-query : display:none masque l'élément mais
-   les autres propriétés (flex-direction, gap…) restent parsées et
-   prêtes à s'appliquer dès que display bascule à flex dans le media-query. */
 .hamburger-btn {
   display: none;
   flex-direction: column;
@@ -292,14 +237,23 @@
   background-color: var(--foreground);
   border-radius: 2px;
   transition: transform 0.35s cubic-bezier(0.25, 0.8, 0.25, 1),
-              opacity  0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+    opacity 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
   transform-origin: center;
 }
 
 /* Hamburger → croix */
-.hamburger-btn.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-.hamburger-btn.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
-.hamburger-btn.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+.hamburger-btn.open span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.hamburger-btn.open span:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+
+.hamburger-btn.open span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
 
 /* =========================================
    PANNEAU MOBILE
@@ -334,9 +288,13 @@
   transition: right 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-/* États ouverts */
-.mobile-nav-panel.open       { right: 0; }
-.mobile-menu-overlay.open    { opacity: 1; }
+.mobile-nav-panel.open {
+  right: 0;
+}
+
+.mobile-menu-overlay.open {
+  opacity: 1;
+}
 
 /* Liens dans le panneau */
 .mobile-nav-panel a {
@@ -382,14 +340,18 @@
    ========================================= */
 @media (max-width: 768px) {
 
-  /* Masquer liens et toggle desktop */
-  .navbar-links           { display: none; }
-  .navbar-menu > .theme-track { display: none; }
+  .navbar-links {
+    display: none;
+  }
 
-  /* Afficher le hamburger */
-  .hamburger-btn          { display: flex; }
+  .navbar-menu>.theme-track {
+    display: none;
+  }
 
-  /* Activer l'overlay */
+  .hamburger-btn {
+    display: flex;
+  }
+
   .mobile-menu-overlay {
     display: block;
     pointer-events: none;
@@ -399,12 +361,9 @@
     pointer-events: auto;
   }
 
-  /* Pilule mobile détachée — on réinitialise max-width pour éviter
-     que la valeur desktop (1000px) ne contraigne la largeur sur tablette paysage. */
+  /* Sur mobile, le décalage vertical est différent (notch iOS).
+     FM ne gère pas top → CSS prend le relais. */
   .navbar.scrolled {
-    width: 92%;
     max-width: none;
-    padding: 0 1.5rem;
-    transform: translateY(calc(15px + env(safe-area-inset-top, 15px))) translateZ(0);
   }
 }

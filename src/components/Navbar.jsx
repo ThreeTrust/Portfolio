@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FaSun, FaMoon } from 'react-icons/fa';
 import './Navbar.css';
 
-// 🎛️ LE NOUVEAU COMPOSANT TOGGLE PREMIUM
+// 🎛️ TOGGLE THÈME PREMIUM
 const ThemeToggle = ({ isDark, toggleTheme }) => {
   const playClickSound = () => {
     try {
@@ -100,13 +100,23 @@ const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isDark, setIsDark] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth <= 768);
 
+  // Scroll
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 50);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    const onScroll = () => setIsScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  // Resize (breakpoint mobile)
+  useEffect(() => {
+    const onResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', onResize, { passive: true });
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
+
+  // Thème initial
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -119,8 +129,8 @@ const Navbar = () => {
     }
   }, []);
 
-  // Bloquer le scroll du body quand le menu est ouvert,
-  // en compensant la largeur de la scrollbar pour éviter tout layout shift.
+  // Bloquer le scroll body quand le menu mobile est ouvert
+  // (avec compensation scrollbar pour éviter le layout shift)
   useEffect(() => {
     if (menuOpen) {
       const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
@@ -157,9 +167,46 @@ const Navbar = () => {
     { href: "#contact", label: "Contact" },
   ];
 
+  // 🎯 Framer Motion anime width / height / borderRadius / padding dans les DEUX sens.
+  //    Le décalage vertical (top) est géré par CSS transition → pas de y ici
+  //    pour éviter le double offset (CSS top + FM translateY = 2x le décalage).
+  const navAnimate = isScrolled
+    ? {
+      y: isMobile ? 15 : 20,
+
+      width: isMobile ? "92%" : "85%",
+      height: isMobile ? 64 : 70,
+
+      borderRadius: 50,
+
+      paddingLeft: isMobile ? "1.5rem" : "3rem",
+      paddingRight: isMobile ? "1.5rem" : "3rem",
+    }
+    : {
+      y: 0,
+
+      width: "100%",
+      height: 80,
+
+      borderRadius: 0,
+
+      paddingLeft: "5%",
+      paddingRight: "5%",
+    };
+
+  const navTransition = {
+    type: 'tween',
+    duration: 0.45,
+    ease: [0.25, 0.8, 0.25, 1],
+  };
+
   return (
     <>
-      <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
+      <motion.nav
+        className={`navbar ${isScrolled ? 'scrolled' : ''}`}
+        animate={navAnimate}
+        transition={navTransition}
+      >
         <div className="navbar-logo">
           <a href="#">Portfolio.</a>
         </div>
@@ -187,7 +234,7 @@ const Navbar = () => {
             <span></span>
           </button>
         </div>
-      </nav>
+      </motion.nav>
 
       {/* --- OVERLAY SOMBRE --- */}
       <div
@@ -197,7 +244,10 @@ const Navbar = () => {
       />
 
       {/* --- PANNEAU LATÉRAL MOBILE --- */}
-      <nav className={`mobile-nav-panel ${menuOpen ? 'open' : ''}`} aria-label="Navigation mobile">
+      <nav
+        className={`mobile-nav-panel ${menuOpen ? 'open' : ''}`}
+        aria-label="Navigation mobile"
+      >
         {navLinks.map(link => (
           <a key={link.href} href={link.href} onClick={closeMenu}>
             {link.label}
