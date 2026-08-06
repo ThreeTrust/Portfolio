@@ -27,15 +27,6 @@
   /* Prend tout l'espace disponible à gauche */
 }
 
-.hero-greeting {
-  font-size: 1.25rem;
-  background: #6366F1;
-  width: 354px;
-  height: 72px;
-  border-radius: 16px;
-  color: var(--muted-foreground);
-  margin-bottom: 0.5rem;
-}
 
 .hero-name {
   font-size: clamp(3rem, 6vw, 4.5rem);
@@ -262,16 +253,19 @@
   }
 }
 
+/* ─── ICÔNES MOBILES : cachées par défaut sur desktop ─── */
+.hero-mobile-icons {
+  display: none;
+}
+
 /* =========================================
-   RESPONSIVE (Mobile & Tablette)
+   RESPONSIVE (Tablette : 768px - 968px)
    ========================================= */
 @media (max-width: 968px) {
   .hero-content {
-    /* Sur petit écran, on passe en colonne (image au-dessus, texte en dessous) */
     flex-direction: column-reverse;
     text-align: center;
-    /* On recentre le texte */
-    gap: 2rem;
+    gap: 2.5rem;
     margin-top: 2rem;
   }
 
@@ -279,16 +273,165 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* Centre les boutons et le texte */
   }
 
   .hero-image-side {
     justify-content: center;
-    /* Centre l'image */
+  }
+
+  .hero-image-container {
+    margin-right: 0;
+    max-width: 360px;
+    margin: 0 auto;
   }
 
   .hero-profile-pic {
+    max-width: 360px;
+  }
+}
+
+/* =========================================
+   RESPONSIVE MOBILE (< 768px)
+   ========================================= */
+@media (max-width: 768px) {
+
+  .hero-section {
+    padding: 0 4%;
+    padding-top: 90px;
+    padding-bottom: 3rem;
+  }
+
+  .hero-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 2rem;
+    margin-top: 0;
+  }
+
+  .hero-text-side {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    order: 2;
+  }
+
+  .hero-image-side {
+    justify-content: center;
+    order: 1;
+  }
+
+  /* --- CONTENEUR IMAGE MOBILE (taille réduite, sans marge pour l'arc) --- */
+  .hero-image-container {
+    width: 100%;
     max-width: 320px;
-    /* On réduit un peu la taille de l'image sur téléphone */
+    height: auto;
+    aspect-ratio: auto;
+    margin-right: 0;
+    margin: 0 auto;
+    animation: float 6s ease-in-out infinite;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hero-profile-pic {
+    width: 220px;
+    height: 220px;
+    max-width: 220px;
+    flex-shrink: 0;
+  }
+
+  /* ─── MASQUER L'ARC (demi-cercle + orbites) SUR MOBILE ─── */
+  .hero-arc-wrapper {
+    display: none;
+  }
+
+  /* ─── ICÔNES SOCIALES EN LIGNE SOUS LA PHOTO ─── */
+  .hero-mobile-icons {
+    display: flex !important;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    width: 280px; /* Plus large que l'image pour qu'elles rentrent toutes */
+  }
+
+  .mobile-icon {
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+    z-index: 10;
+    width: 48px;
+    height: 48px;
+    font-size: 1.1rem;
+  }
+
+  .mobile-icon:hover {
+    transform: scale(1.15) !important;
+  }
+
+
+  /* --- TEXTE --- */
+  .hero-name {
+    font-size: clamp(1.8rem, 7vw, 2.6rem);
+    margin-bottom: 0.4rem;
+  }
+
+  .hero-title {
+    font-size: clamp(1.4rem, 5.5vw, 2rem);
+    margin-bottom: 1.2rem;
+  }
+
+  .fx-text-split {
+    white-space: normal;
+  }
+
+  .hero-description {
+    font-size: 0.95rem;
+    margin-bottom: 1.8rem;
+    max-width: 90%;
+  }
+
+  /* --- BOUTONS --- */
+  .hero-buttons {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.8rem;
+  }
+
+  .btn {
+    padding: 0.8rem 1.5rem;
+    font-size: 0.95rem;
+  }
+}
+
+/* =========================================
+   TRÈS PETITS MOBILES (< 400px)
+   ========================================= */
+@media (max-width: 400px) {
+  .hero-image-container {
+    width: 180px;
+    max-width: 180px;
+  }
+
+  .hero-profile-pic {
+    width: 180px;
+    height: 180px;
+    max-width: 180px;
+  }
+
+  .hero-name {
+    font-size: 1.6rem;
+  }
+
+  .hero-title {
+    font-size: 1.3rem;
+  }
+
+  .btn {
+    padding: 0.7rem 1.2rem;
+    font-size: 0.88rem;
   }
 }

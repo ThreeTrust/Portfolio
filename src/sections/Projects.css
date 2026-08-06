@@ -160,3 +160,37 @@
   color: var(--muted-foreground);
   transform: none;
 }
+
+/* =========================================
+   RESPONSIVE MOBILE
+   ========================================= */
+@media (max-width: 768px) {
+  .projects-section {
+    padding: 60px 4%;
+  }
+
+  .stack-container {
+    max-width: 340px;
+    height: 500px;
+    margin: 2.5rem auto;
+  }
+
+  .project-media-container {
+    height: 190px;
+  }
+
+  .project-info h3 {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .stack-container {
+    max-width: 300px;
+    height: 480px;
+  }
+
+  .project-media-container {
+    height: 170px;
+  }
+}

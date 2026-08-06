@@ -3,6 +3,13 @@ import { FaPhoneAlt, FaEnvelope, FaLinkedinIn, FaFacebookF } from 'react-icons/f
 import Reveal from '../components/Reveal';
 import whatImg from '../assets/WHAT.png';
 
+// Données centralisées des icônes sociales
+const socialLinks = [
+  { href: "tel:+2250173056396", icon: <FaPhoneAlt />, label: "Téléphone" },
+  { href: "mailto:patyanyouzan@gmail.com", icon: <FaEnvelope />, label: "Email" },
+  { href: "https://www.linkedin.com/in/patrick-youzan-138723309/", icon: <FaLinkedinIn />, label: "LinkedIn", external: true },
+  { href: "https://www.facebook.com/profile.php?id=100080367537603", icon: <FaFacebookF />, label: "Facebook", external: true },
+];
 const Hero = () => {
   // On stocke le texte dans une variable pour le découper facilement
   const roleText = "Développeur Front-End";
@@ -60,12 +67,12 @@ const Hero = () => {
                 alt="Portrait de moi"
                 className="hero-profile-pic"
               />
-              {/* L'arc de cercle et les icônes (Orbit responsive) */}
+              {/* L'arc de cercle et les icônes (version desktop) */}
               <div className="hero-arc-wrapper">
                 <div className="hero-arc-line"></div>
 
                 <div className="icon-orbit" style={{ '--angle': '40deg' }}>
-                  <a href="tel:+225 0173056396" className="hero-arc-icon" aria-label="Téléphone"><FaPhoneAlt /></a>
+                  <a href="tel:+2250173056396" className="hero-arc-icon" aria-label="Téléphone"><FaPhoneAlt /></a>
                 </div>
 
                 <div className="icon-orbit" style={{ '--angle': '73deg' }}>
@@ -81,6 +88,22 @@ const Hero = () => {
                 </div>
 
               </div>
+
+              {/* ─── ICÔNES MOBILES : visibles uniquement sur mobile (via CSS) ─── */}
+              <div className="hero-mobile-icons">
+                {socialLinks.map((link) => (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    className="hero-arc-icon mobile-icon"
+                    aria-label={link.label}
+                    {...(link.external ? { target: "_blank", rel: "noreferrer" } : {})}
+                  >
+                    {link.icon}
+                  </a>
+                ))}
+              </div>
+
             </div>
           </Reveal>
         </div>

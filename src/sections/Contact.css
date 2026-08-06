@@ -144,11 +144,23 @@
    RESPONSIVE (Mobile)
    ========================================= */
 @media (max-width: 768px) {
+  .contact-section {
+    padding-top: 60px;
+  }
+
+  .contact-container {
+    margin-bottom: 80px;
+  }
+
   .form-row {
     flex-direction: column; /* Sur mobile, le nom et l'email s'empilent */
   }
   
   .contact-form {
     padding: 2rem 1.5rem;
+  }
+
+  .contact-description {
+    font-size: 1rem;
   }
 }

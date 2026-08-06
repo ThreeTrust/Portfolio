@@ -4,41 +4,64 @@
 .navbar {
   position: fixed;
   top: 0;
-  
-  /* 🔥 CORRECTION POUR FRAMER MOTION : Le centrage parfait sans "transform" */
-  left: 0;
-  right: 0;
-  margin: 0 auto;
-  
+
+  /* 🔥 CENTRAGE FIABLE : left 50% + translateX(-50%) au lieu de left/right/margin:auto.
+     Cette technique reste centrée quelle que soit la largeur d'écran, le box-sizing,
+     ou les paddings, contrairement à "left:0; right:0; margin:0 auto". */
+  left: 50%;
+
   width: 100%;
   height: 80px;
-  background-color: var(--background); 
+  background-color: var(--background);
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 5%;
-  z-index: 1000; 
-  border-radius: 0px; 
-  
-  transition: background-color var(--transition-speed), box-shadow var(--transition-speed);
+  z-index: 1000;
+  border-radius: 0px;
+  box-sizing: border-box;
+
+  /* 🔥 CORRECTION BUG "NAVBAR COUPÉE" :
+     On n'anime JAMAIS "top" (ça force un recalcul de layout à chaque frame,
+     ce qui désynchronise le rendu pendant un scroll rapide vers le bas).
+     On liste les propriétés explicitement et on remplace l'offset vertical
+     par transform: translateY(), qui est géré par le GPU (compositeur),
+     donc toujours fluide et synchro peu importe la vitesse/direction du scroll. */
+  transition: width 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
+    height 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
+    max-width 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
+    padding 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
+    background-color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
+    border-radius 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
+    box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
+    transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+  /* Centrage horizontal (translateX -50%) + offset vertical (translateY, animé) */
+  transform: translateX(-50%) translateY(0) translateZ(0);
+  -webkit-transform: translateX(-50%) translateY(0) translateZ(0);
+
+  /* 🔥 FIX IOS SAFARI : Force le rendu sur un calque GPU séparé pour éviter le bug où la navbar est coupée en deux */
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  will-change: transform, background-color, border-radius, width;
 }
 
 /* --- 1. LA BORDURE NETTE ANIMÉE --- */
 .navbar::before {
   content: "";
   position: absolute;
-  inset: 0; 
-  border-radius: 50px; 
-  padding: 3px; 
+  inset: 0;
+  border-radius: 50px;
+  padding: 3px;
   background: linear-gradient(120deg, var(--primary), var(--accent), var(--primary));
   background-size: 200% 100%;
-  -webkit-mask: 
-    linear-gradient(#fff 0 0) content-box, 
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
     linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   animation: fx-border-glow-flow 4s linear infinite;
-  pointer-events: none; 
+  pointer-events: none;
   opacity: 0;
   transition: opacity 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
@@ -47,29 +70,32 @@
 .navbar::after {
   content: "";
   position: absolute;
-  
+
   /* On agrandit la boîte de 15px vers l'extérieur pour laisser le flou respirer */
-  inset: -15px; 
-  border-radius: 0px; 
-  
+  inset: -15px;
+  border-radius: 0px;
+
   /* On utilise une bordure transparente de 15px pour retenir la couleur */
-  border: 15px solid transparent; 
-  padding: 2px; /* 15px de bordure + 2px de padding = 17px pour évider sous la bordure nette */
-  
+  border: 15px solid transparent;
+  padding: 2px;
+  /* 15px de bordure + 2px de padding = 17px pour évider sous la bordure nette */
+
   background: linear-gradient(45deg, var(--primary), var(--accent), var(--primary));
-  background-clip: padding-box; /* Force la couleur à rester avant la bordure transparente */
+  background-clip: padding-box;
+  /* Force la couleur à rester avant la bordure transparente */
   background-size: 200% 200%;
-  
-  z-index: -1; 
-  filter: blur(10px); /* Le flou peut maintenant diffuser dans la zone des 15px ! */
-  opacity: 0; 
+
+  z-index: -1;
+  filter: blur(10px);
+  /* Le flou peut maintenant diffuser dans la zone des 15px ! */
+  opacity: 0;
   pointer-events: none;
   transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
   animation: fx-border-glow-flow 4s linear infinite;
 
   /* Le masque qui évide le centre */
-  -webkit-mask: 
-    linear-gradient(#fff 0 0) content-box, 
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
     linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
@@ -81,13 +107,13 @@
 .navbar-logo a {
   font-size: 1.5rem;
   font-weight: 800;
-  color: var(--primary); 
+  color: var(--primary);
 }
 
 .navbar-menu {
   display: flex;
   align-items: center;
-  gap: 2.5rem; 
+  gap: 2.5rem;
 }
 
 .navbar-links {
@@ -147,50 +173,232 @@
   justify-content: center;
 }
 
-.sun-icon { color: #f59e0b; }
-.moon-icon { color: #bfdbfe; }
+.sun-icon {
+  color: #f59e0b;
+}
+
+.moon-icon {
+  color: #bfdbfe;
+}
 
 /* =========================================
-   ÉTAT SCROLLÉ (Détaché avec effet iOS)
+   ÉTAT SCROLLÉ (Détaché en pilule avec effet iOS)
    ========================================= */
 .navbar.scrolled {
-  top: 20px; 
-  width: 85%; 
-  max-width: 1000px; 
-  height: 70px; 
-  border-radius: 50px; 
-  
+  width: 85%;
+  max-width: 1000px;
+  height: 70px;
+  border-radius: 50px;
+
   /* L'effet Glassmorphism d'Apple (Fond semi-transparent + flou d'arrière-plan) */
-  background-color: color-mix(in srgb, var(--card) 85%, transparent); 
+  background-color: color-mix(in srgb, var(--card) 85%, transparent);
   backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px); /* Pour Safari/iPhone */
-  
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  padding: 0 3rem; 
+  -webkit-backdrop-filter: blur(12px);
+  /* Pour Safari/iPhone */
+
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  padding: 0 3rem;
+
+  /* 🔥 Offset vertical de 20px géré par translateY (GPU) au lieu de "top: 20px" */
+  transform: translateX(-50%) translateY(20px) translateZ(0);
+  -webkit-transform: translateX(-50%) translateY(20px) translateZ(0);
 }
 
 /* Apparition de la bordure nette */
 .navbar.scrolled::before {
-  opacity: 1; 
+  opacity: 1;
 }
 
 /* On arrondit le Glow pour qu'il épouse parfaitement la forme */
 .navbar.scrolled::after {
-  border-radius: 65px; /* 50px (navbar) + 15px (l'agrandissement) = 65px */
+  border-radius: 65px;
+  /* 50px (navbar) + 15px (l'agrandissement) = 65px */
 }
 
 /* Déclenchement du Glow au survol */
 .navbar.scrolled:hover::after {
-  opacity: 0.8; /* Légèrement plus fort pour compenser le flou externe */
+  opacity: 0.8;
 }
+
 
 /* =========================================
    ANIMATIONS
    ========================================= */
 @keyframes fx-border-hue {
-  to { filter: hue-rotate(360deg); }
+  to {
+    filter: hue-rotate(360deg);
+  }
 }
 
 @keyframes fx-border-glow-flow {
-  to { background-position: 300% 50%; }
+  to {
+    background-position: 300% 50%;
+  }
+}
+
+/* =========================================
+   RESPONSIVE MOBILE NAVBAR (< 768px)
+   ========================================= */
+
+/* --- BOUTON HAMBURGER --- */
+.hamburger-btn {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+  z-index: 1100;
+}
+
+.hamburger-btn:hover {
+  background-color: rgba(46, 103, 255, 0.1);
+}
+
+.hamburger-btn span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background-color: var(--foreground);
+  border-radius: 2px;
+  transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transform-origin: center;
+}
+
+/* Animation hamburger → croix */
+.hamburger-btn.open span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.hamburger-btn.open span:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+
+.hamburger-btn.open span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* --- PANNEAU MOBILE --- */
+.mobile-menu-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 900;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.mobile-nav-panel {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: min(320px, 85%);
+  height: 100%;
+  background-color: var(--background);
+  border-left: 1px solid var(--border);
+  z-index: 950;
+  padding: 100px 2.5rem 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  box-shadow: -10px 0 40px rgba(0, 0, 0, 0.15);
+  transition: right 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* État ouvert */
+.mobile-nav-panel.open {
+  right: 0;
+}
+
+.mobile-menu-overlay.open {
+  opacity: 1;
+}
+
+/* Liens dans le panneau */
+.mobile-nav-panel a {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--foreground);
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border);
+  transition: color 0.25s ease, padding-left 0.25s ease;
+  display: block;
+}
+
+.mobile-nav-panel a:last-of-type {
+  border-bottom: none;
+}
+
+.mobile-nav-panel a:hover {
+  color: var(--primary);
+  padding-left: 0.5rem;
+}
+
+.mobile-nav-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 1.5rem 0;
+}
+
+.mobile-theme-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+.mobile-theme-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--muted-foreground);
+}
+
+@media (max-width: 768px) {
+
+  /* Cacher les liens et le toggle dans la navbar */
+  .navbar-links {
+    display: none;
+  }
+
+  /* Cacher le toggle desktop, on l'affiche dans le panneau */
+  .navbar-menu>.theme-track {
+    display: none;
+  }
+
+  /* Afficher le bouton hamburger */
+  .hamburger-btn {
+    display: flex;
+  }
+
+  /* Activer l'overlay */
+  .mobile-menu-overlay {
+    display: block;
+    pointer-events: none;
+  }
+
+  .mobile-menu-overlay.open {
+    pointer-events: auto;
+  }
+
+  /* Navbar state scrolled sur mobile : pilule détachée avec espace pour le notch.
+     L'offset vertical (15px + safe-area) passe aussi par translateY, pas "top". */
+  .navbar.scrolled {
+    width: 92%;
+    padding: 0 1.5rem;
+    transform: translateX(-50%) translateY(calc(15px + env(safe-area-inset-top, 15px))) translateZ(0);
+    -webkit-transform: translateX(-50%) translateY(calc(15px + env(safe-area-inset-top, 15px))) translateZ(0);
+  }
 }
