@@ -27,6 +27,25 @@
   /* Prend tout l'espace disponible à gauche */
 }
 
+.hero-greeting {
+  font-size: 1.25rem;
+  background: #6366F1;
+  width: 354px;
+  height: 72px;
+  border-radius: 16px;
+  color: var(--muted-foreground);
+  margin-bottom: 0.5rem;
+}
+
+.hero-greeting2 {
+  font-size: 1.25rem;
+  background: #6366F1;
+  width: 354px;
+  height: 72px;
+  border-radius: 16px;
+  color: var(--muted-foreground);
+  margin-bottom: 0.5rem;
+}
 
 .hero-name {
   font-size: clamp(3rem, 6vw, 4.5rem);
