@@ -96,6 +96,7 @@
 .navbar-links a:hover {
   color: var(--primary);
 }
+
 /* --- LE NOUVEAU TOGGLE PREMIUM --- */
 .theme-track {
   position: relative;
@@ -166,11 +167,11 @@
      Résultat : intensité maximale au bord, quasi zéro à ~18px de distance. */
   box-shadow:
     0 10px 30px rgba(0, 0, 0, 0.15),
-    0 0  6px 1px color-mix(in srgb, var(--primary) 25%, transparent),
-    0 0 14px 3px color-mix(in srgb, var(--accent)  12%, transparent);
+    0 0 6px 1px color-mix(in srgb, var(--primary) 25%, transparent),
+    0 0 14px 3px color-mix(in srgb, var(--accent) 12%, transparent);
 
   transition:
-    box-shadow       0.45s cubic-bezier(0.25, 0.8, 0.25, 1),
+    box-shadow 0.45s cubic-bezier(0.25, 0.8, 0.25, 1),
     background-color 0.45s cubic-bezier(0.25, 0.8, 0.25, 1);
 
   /* max-width contraint la pilule sur grands écrans */
@@ -186,8 +187,8 @@
 .navbar.scrolled:hover {
   box-shadow:
     0 10px 30px rgba(0, 0, 0, 0.15),
-    0 0  8px 2px color-mix(in srgb, var(--primary) 40%, transparent),
-    0 0 18px 5px color-mix(in srgb, var(--accent)  20%, transparent);
+    0 0 8px 2px color-mix(in srgb, var(--primary) 40%, transparent),
+    0 0 18px 5px color-mix(in srgb, var(--accent) 20%, transparent);
 }
 
 /* =========================================
@@ -257,6 +258,7 @@
 /* =========================================
    PANNEAU MOBILE
    ========================================= */
+
 .mobile-menu-overlay {
   display: none;
   position: fixed;
