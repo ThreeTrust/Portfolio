@@ -1,24 +1,19 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaSun, FaMoon } from 'react-icons/fa'; // On utilise react-icons au lieu de lucide-react !
+import { FaSun, FaMoon } from 'react-icons/fa';
 import './Navbar.css';
 
 // 🎛️ LE NOUVEAU COMPOSANT TOGGLE PREMIUM
 const ThemeToggle = ({ isDark, toggleTheme }) => {
-  // L'effet sonore (Web Audio API)
   const playClickSound = () => {
     try {
       const AudioContext = window.AudioContext || window.webkitAudioContext;
       if (!AudioContext) return;
-      
       const ctx = new AudioContext();
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
-
       osc.connect(gain);
       gain.connect(ctx.destination);
-
-      // Pitch différent selon la direction
       if (isDark) {
         osc.type = "sine";
         osc.frequency.setValueAtTime(400, ctx.currentTime);
@@ -28,11 +23,8 @@ const ThemeToggle = ({ isDark, toggleTheme }) => {
         osc.frequency.setValueAtTime(600, ctx.currentTime);
         osc.frequency.exponentialRampToValueAtTime(300, ctx.currentTime + 0.1);
       }
-
-      // Volume très subtil (0.03) pour un effet premium
       gain.gain.setValueAtTime(0.03, ctx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
-
       osc.start(ctx.currentTime);
       osc.stop(ctx.currentTime + 0.15);
     } catch (e) {
@@ -52,30 +44,24 @@ const ThemeToggle = ({ isDark, toggleTheme }) => {
       role="switch"
       aria-checked={!isDark}
       aria-label="Toggle Dark Mode"
-      // Animation du fond du Track
       animate={{
         backgroundColor: isDark ? "rgba(30, 30, 35, 1)" : "rgba(220, 220, 225, 1)",
-        boxShadow: isDark 
-          ? "inset 0px 4px 8px rgba(0,0,0,0.5)" 
+        boxShadow: isDark
+          ? "inset 0px 4px 8px rgba(0,0,0,0.5)"
           : "inset 0px 4px 8px rgba(0,0,0,0.1)",
       }}
       transition={{ duration: 0.4, ease: "easeInOut" }}
     >
       <motion.div
         className="theme-thumb"
-        // Animation du cercle (Thumb) : 0px à gauche, 34px à droite
         animate={{
-          x: isDark ? 0 : 34, 
+          x: isDark ? 0 : 34,
           backgroundColor: isDark ? "#2c2c2c" : "#ffffff",
-          boxShadow: isDark 
-            ? "0px 4px 12px rgba(0,0,0,0.6), 0 0 10px rgba(46, 103, 255, 0.2)" 
+          boxShadow: isDark
+            ? "0px 4px 12px rgba(0,0,0,0.6), 0 0 10px rgba(46, 103, 255, 0.2)"
             : "0px 4px 12px rgba(0,0,0,0.2), 0 0 15px rgba(255, 200, 0, 0.3)",
         }}
-        transition={{
-          type: "spring",
-          stiffness: 400,
-          damping: 25,
-        }}
+        transition={{ type: "spring", stiffness: 400, damping: 25 }}
       >
         <div className="theme-icon-container">
           <AnimatePresence mode="wait">
@@ -113,11 +99,10 @@ const ThemeToggle = ({ isDark, toggleTheme }) => {
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isDark, setIsDark] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
+    const handleScroll = () => setIsScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -125,15 +110,31 @@ const Navbar = () => {
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
     if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
       setIsDark(true);
-      document.documentElement.classList.add('dark'); 
+      document.documentElement.classList.add('dark');
     } else {
       setIsDark(false);
       document.documentElement.classList.remove('dark');
     }
   }, []);
+
+  // Bloquer le scroll du body quand le menu est ouvert,
+  // en compensant la largeur de la scrollbar pour éviter tout layout shift.
+  useEffect(() => {
+    if (menuOpen) {
+      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+      document.body.style.overflow = 'hidden';
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+    } else {
+      document.body.style.overflow = '';
+      document.body.style.paddingRight = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+      document.body.style.paddingRight = '';
+    };
+  }, [menuOpen]);
 
   const toggleTheme = () => {
     if (isDark) {
@@ -147,36 +148,70 @@ const Navbar = () => {
     }
   };
 
-  const iosSpring = {
-    type: "spring",
-    stiffness: 350,
-    damping: 25,
-    mass: 0.8
-  };
+  const closeMenu = () => setMenuOpen(false);
+
+  const navLinks = [
+    { href: "#apropos", label: "À propos" },
+    { href: "#projets", label: "Projets" },
+    { href: "#competences", label: "Compétences" },
+    { href: "#contact", label: "Contact" },
+  ];
 
   return (
-    <motion.nav 
-      className={`navbar ${isScrolled ? 'scrolled' : ''}`}
-      layout 
-      transition={iosSpring} 
-    >
-      <motion.div layout transition={iosSpring} className="navbar-logo">
-        <a href="#">Portfolio.</a>
-      </motion.div>
-      
-      <motion.div layout transition={iosSpring} className="navbar-menu">
-        <ul className="navbar-links">
-          <li><a href="#apropos">À propos</a></li>
-          <li><a href="#projets">Projets</a></li>
-          <li><a href="#competences">Compétences</a></li>
-          <li><a href="#contact">Contact</a></li>
-        </ul>
-        
-        {/* On intègre notre nouveau bouton magique ici ! */}
-        <ThemeToggle isDark={isDark} toggleTheme={toggleTheme} />
-        
-      </motion.div>
-    </motion.nav>
+    <>
+      <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
+        <div className="navbar-logo">
+          <a href="#">Portfolio.</a>
+        </div>
+
+        <div className="navbar-menu">
+          {/* Liens desktop */}
+          <ul className="navbar-links">
+            {navLinks.map(link => (
+              <li key={link.href}><a href={link.href}>{link.label}</a></li>
+            ))}
+          </ul>
+
+          {/* Toggle thème desktop */}
+          <ThemeToggle isDark={isDark} toggleTheme={toggleTheme} />
+
+          {/* Bouton hamburger mobile */}
+          <button
+            className={`hamburger-btn ${menuOpen ? 'open' : ''}`}
+            onClick={() => setMenuOpen(prev => !prev)}
+            aria-label={menuOpen ? "Fermer le menu" : "Ouvrir le menu"}
+            aria-expanded={menuOpen}
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+        </div>
+      </nav>
+
+      {/* --- OVERLAY SOMBRE --- */}
+      <div
+        className={`mobile-menu-overlay ${menuOpen ? 'open' : ''}`}
+        onClick={closeMenu}
+        aria-hidden="true"
+      />
+
+      {/* --- PANNEAU LATÉRAL MOBILE --- */}
+      <nav className={`mobile-nav-panel ${menuOpen ? 'open' : ''}`} aria-label="Navigation mobile">
+        {navLinks.map(link => (
+          <a key={link.href} href={link.href} onClick={closeMenu}>
+            {link.label}
+          </a>
+        ))}
+        <hr className="mobile-nav-divider" />
+        <div className="mobile-theme-row">
+          <span className="mobile-theme-label">
+            {isDark ? "Mode Sombre" : "Mode Clair"}
+          </span>
+          <ThemeToggle isDark={isDark} toggleTheme={toggleTheme} />
+        </div>
+      </nav>
+    </>
   );
 };
 

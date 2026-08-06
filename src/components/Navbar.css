@@ -5,10 +5,15 @@
   position: fixed;
   top: 0;
 
-  /* 🔥 CENTRAGE FIABLE : left 50% + translateX(-50%) au lieu de left/right/margin:auto.
-     Cette technique reste centrée quelle que soit la largeur d'écran, le box-sizing,
-     ou les paddings, contrairement à "left:0; right:0; margin:0 auto". */
-  left: 50%;
+  /* 🔥 CENTRAGE STABLE : left:0 right:0 margin:auto au lieu de left:50%+translateX(-50%).
+     La technique left:50%+translateX(-50%) est SENSIBLE à la largeur de la scrollbar :
+     quand le body passe en overflow:hidden (menu mobile ouvert), la scrollbar disparaît,
+     la largeur du viewport change de ~17px, et le point 50% se déplace → la navbar saute.
+     Avec left:0 right:0 margin:auto, le centrage est calculé par le layout CSS, pas par
+     le transform → aucun saut même si le viewport change de largeur. */
+  left: 0;
+  right: 0;
+  margin: 0 auto;
 
   width: 100%;
   height: 80px;
@@ -36,9 +41,10 @@
     box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
     transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
 
-  /* Centrage horizontal (translateX -50%) + offset vertical (translateY, animé) */
-  transform: translateX(-50%) translateY(0) translateZ(0);
-  -webkit-transform: translateX(-50%) translateY(0) translateZ(0);
+  /* Offset vertical uniquement (translateY, animé) — pas de translateX car le centrage
+     est déjà géré par left:0 right:0 margin:auto ci-dessus. */
+  transform: translateY(0) translateZ(0);
+  -webkit-transform: translateY(0) translateZ(0);
 
   /* 🔥 FIX IOS SAFARI : Force le rendu sur un calque GPU séparé pour éviter le bug où la navbar est coupée en deux */
   -webkit-backface-visibility: hidden;
@@ -200,8 +206,8 @@
   padding: 0 3rem;
 
   /* 🔥 Offset vertical de 20px géré par translateY (GPU) au lieu de "top: 20px" */
-  transform: translateX(-50%) translateY(20px) translateZ(0);
-  -webkit-transform: translateX(-50%) translateY(20px) translateZ(0);
+  transform: translateY(20px) translateZ(0);
+  -webkit-transform: translateY(20px) translateZ(0);
 }
 
 /* Apparition de la bordure nette */
@@ -233,6 +239,44 @@
 @keyframes fx-border-glow-flow {
   to {
     background-position: 300% 50%;
+  }
+}
+
+/* =========================================
+   PALIER INTERMÉDIAIRE (tablette / petit laptop, < 1024px)
+   On resserre les espacements progressivement pour que le logo,
+   les 4 liens et le toggle continuent à tenir dans la pilule
+   avant que le seuil mobile (768px) ne bascule sur le hamburger.
+   ========================================= */
+@media (max-width: 1024px) {
+  .navbar {
+    padding: 0 3%;
+  }
+
+  .navbar-menu {
+    gap: 1.5rem;
+  }
+
+  .navbar-links {
+    gap: 1.25rem;
+  }
+
+  .navbar-links a {
+    font-size: 0.92rem;
+  }
+
+  .navbar.scrolled {
+    padding: 0 1.75rem;
+  }
+}
+
+@media (max-width: 850px) {
+  .navbar-links {
+    gap: 0.9rem;
+  }
+
+  .navbar-links a {
+    font-size: 0.85rem;
   }
 }
 
@@ -398,7 +442,7 @@
   .navbar.scrolled {
     width: 92%;
     padding: 0 1.5rem;
-    transform: translateX(-50%) translateY(calc(15px + env(safe-area-inset-top, 15px))) translateZ(0);
-    -webkit-transform: translateX(-50%) translateY(calc(15px + env(safe-area-inset-top, 15px))) translateZ(0);
+    transform: translateY(calc(15px + env(safe-area-inset-top, 15px))) translateZ(0);
+    -webkit-transform: translateY(calc(15px + env(safe-area-inset-top, 15px))) translateZ(0);
   }
 }
