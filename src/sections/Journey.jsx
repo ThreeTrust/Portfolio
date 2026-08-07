@@ -1,5 +1,6 @@
 import { educationData, experienceData } from '../data/content'; 
 import Reveal from '../components/Reveal';
+import { FaGraduationCap, FaBriefcase } from 'react-icons/fa';
 import './Journey.css';
 
 const Journey = () => {
@@ -21,7 +22,9 @@ const Journey = () => {
           
           {/* --- COLONNE 1 : ÉDUCATION --- */}
           <div className="journey-column">
-            <h3 className="column-title">🎓 Éducation</h3>
+            <h3 className="column-title">
+              <FaGraduationCap className="column-icon" /> Éducation
+            </h3>
             <div className="timeline">
               {educationData.map((item, index) => (
                 <div key={item.id} className="timeline-item">
@@ -43,7 +46,9 @@ const Journey = () => {
 
           {/* --- COLONNE 2 : EXPÉRIENCE --- */}
           <div className="journey-column">
-            <h3 className="column-title">💼 Expériences</h3>
+            <h3 className="column-title">
+              <FaBriefcase className="column-icon" /> Expériences
+            </h3>
             <div className="timeline">
               {experienceData.map((item, index) => (
                 <div key={item.id} className="timeline-item">

@@ -45,13 +45,13 @@ const About = () => {
               />
             </div>
             <div>
-              <h3 className="bio-name">Développeur Full-Stack</h3>
+              <h3 className="bio-name">Développeur Web & Mobile</h3>
               <p className="bio-tag">Passionné & Créatif</p>
             </div>
           </div>
           <div className="bio-text-wrapper">
             <p className="bio-text">
-              Passionné par le développement web, je conçois des applications robustes et des interfaces intuitives. Mon objectif ? Transformer des idées complexes en solutions élégantes, réactives et centrées sur l'utilisateur.
+              Passionné par le développement web et mobile, je conçois des applications robustes et des interfaces intuitives (iOS, Android & Web). Mon objectif ? Transformer des idées complexes en solutions élégantes, réactives et centrées sur l'utilisateur.
             </p>
             <p className="bio-text" style={{ marginTop: '0.8rem' }}>
               En veille technologique constante, j'aime relever des défis techniques, écrire du code maintenable et optimiser chaque détail pour offrir la meilleure expérience numérique possible.

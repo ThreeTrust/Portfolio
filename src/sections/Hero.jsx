@@ -12,7 +12,7 @@ const socialLinks = [
 ];
 const Hero = () => {
   // On stocke le texte dans une variable pour le découper facilement
-  const roleText = "Développeur Front-End";
+  const roleText = "Développeur Web & Mobile";
 
   return (
     <section className="hero-section" id="accueil">
@@ -45,7 +45,7 @@ const Hero = () => {
 
           <Reveal direction="left" delay={0.3}>
             <p className="hero-description">
-              Je conçois et développe des expériences web modernes, performantes et
+              Je conçois et développe des applications web et mobiles modernes, performantes et
               accessibles. Transformons vos idées en réalité numérique.
             </p>
           </Reveal>

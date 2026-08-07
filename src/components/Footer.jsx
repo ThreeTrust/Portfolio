@@ -85,7 +85,7 @@ const Footer = () => {
       <div className="footer-bottom">
         <div className="footer-bottom-container">
           <p className="copyright">
-            © {new Date().getFullYear()} Mon Portfolio. Tous droits réservés.
+            Conçu et développé par <b>Patrick YOUZAN</b> © {new Date().getFullYear()}
           </p>
         </div>
       </div>

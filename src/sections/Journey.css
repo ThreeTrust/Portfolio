@@ -31,6 +31,12 @@
   gap: 0.5rem;
 }
 
+.column-icon {
+  color: var(--primary);
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
 /* =========================================
    LA TIMELINE (Ligne d'énergie verticale)
    ========================================= */
